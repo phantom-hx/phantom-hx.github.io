@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="幻心">
+
+
+
+
+
+<title>PHP文件包含&amp;cookie&amp;文件上传 | 幻心&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">幻心&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">幻心&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">PHP文件包含&amp;cookie&amp;文件上传</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">幻心</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 13, 2020&nbsp;&nbsp;20:00:00</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/WEB%E5%AE%89%E5%85%A8/">WEB安全</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="PHP文件包含、cookie、文件上传"><a href="#PHP文件包含、cookie、文件上传" class="headerlink" title="PHP文件包含、cookie、文件上传"></a>PHP文件包含、cookie、文件上传</h3><h3 id="一、文件包含"><a href="#一、文件包含" class="headerlink" title="一、文件包含"></a>一、文件包含</h3><p>在 PHP 中，可以在服务器执行 PHP 文件之前在该文件中插入一个文件的内容。</p>
+<p><strong>include</strong> 和 <strong>require</strong> 语句用于在执行流中插入写在其他文件中的有用的代码。</p>
+<p>两者之间的区别在于：</p>
+<p><strong>include</strong>生成一个警告，在错误发生后依然会执行。</p>
+<p><strong>require</strong>生成一个致命错误，在错误发生时就会停止执行。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">include &#x27;head.php&#x27;;  include会在PHP文件开始运行的时候包含</span><br><span class="line">require &#x27;tail.php&#x27;;  require会在PHP文件运行到require关键字时包含</span><br></pre></td></tr></table></figure>
+
+<p>include_once和require_once表示只包含一次</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">include_once &#x27;head.php&#x27;;</span><br><span class="line">require_once &#x27;tail.php&#x27;;</span><br></pre></td></tr></table></figure>
+
+<p>二、cookie和session</p>
+<p>2.1cookie</p>
+<p><strong>cookie</strong> 常用于识别用户。cookie 是一种服务器留在用户计算机上的小文件。每当同一台计算机通过浏览器请求页面时，这台计算机将会发送 cookie。通过 PHP，您能够创建并取回 cookie 的值。</p>
+<p>**setcookie()**函数用来设置cookie </p>
+<p>注意：setcookie()函数必须位于``标签之前。</p>
+<p>创建一个名为 “user” 的 cookie，并为它赋值 “runoob”。并规定了此 cookie 在一小时后过期： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">setcookie(&quot;user&quot;, &quot;runoob&quot;, time()+3600);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-1取回cookie值"><a href="#2-1-1取回cookie值" class="headerlink" title="2.1.1取回cookie值"></a>2.1.1取回cookie值</h3><p><strong>$_COOKIE</strong> 变量用于取回 cookie 的值。</p>
+<p> 取回名为 “user” 的 cookie 的值，并把它显示在了页面上：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">// 输出 cookie 值</span><br><span class="line">echo $_COOKIE[&quot;user&quot;];</span><br><span class="line"></span><br><span class="line">// 查看所有 cookie</span><br><span class="line">print_r($_COOKIE);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-1-2删除cookie"><a href="#2-1-2删除cookie" class="headerlink" title="2.1.2删除cookie"></a>2.1.2删除cookie</h3><p>删除cookie很简单，只要将日期改为过去的时间点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">// 设置 cookie 过期时间为过去 1 小时</span><br><span class="line">setcookie(&quot;user&quot;, &quot;&quot;, time()-3600);</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2session"><a href="#2-2session" class="headerlink" title="2.2session"></a>2.2session</h3><p><strong>Session</strong> 变量用于存储关于用户会话（session）的信息，或者更改用户会话（session）的设置。Session 变量存储单一用户的信息，并且对于应用程序中的所有页面都是可用的。</p>
+<p> 在把用户信息存储到 PHP session 中之前，首先必须启动会话。</p>
+<p>注意：session_start() 函数必须位于`` 标签之前：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php session_start(); ?&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-1存储session"><a href="#2-2-1存储session" class="headerlink" title="2.2.1存储session"></a>2.2.1存储session</h3><p>存储和取回 session 变量的方法是使用 PHP $_SESSION 变量： </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">session_start();</span><br><span class="line">// 存储 session 数据</span><br><span class="line">$_SESSION[&#x27;views&#x27;]=1;</span><br><span class="line">?&gt;</span><br><span class="line"></span><br><span class="line">&lt;?php</span><br><span class="line">// 检索 session 数据</span><br><span class="line">echo &quot;检索&quot;. $_SESSION[&#x27;views&#x27;];</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-2删除session"><a href="#2-2-2删除session" class="headerlink" title="2.2.2删除session"></a>2.2.2删除session</h3><p>删除session数据，可以使用 session_destroy() 函数。</p>
+<p>session_destroy() 函数是彻底销毁 session </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">session_destroy();</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>三、文件上传</p>
+<p>PHP可以把文件上传到服务器中。</p>
+<p>文件上传的HTML表单，代码会在查看页面时出现上传界面</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;from&gt;</span><br><span class="line">&lt;input type=&quot;file&quot; name=&quot;file&quot;&gt;</span><br><span class="line">  &lt;input type=&quot;submit&quot; value=&quot;提交&quot;&gt;</span><br><span class="line">&lt;/from&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在PHP中可以写上传文件的代码</p>
+<p>在这里限制了只能上传jpg和png格式的文件如果上传的文件与规定上传的文件格式不匹配，是不允许上传的。</p>
+<p>在上传后，文件将会存储在用户指定的文件夹</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$ext_arr = array(&#x27;jpg&#x27;, &#x27;png&#x27;);</span><br><span class="line"> if (isset($_FILES[&#x27;file&#x27;]))&#123;</span><br><span class="line">     if ($_FILES[&#x27;file&#x27;] [&#x27;error&#x27;] == 0 )&#123;</span><br><span class="line">         if (in_array($filename, $ext_arr) === false) &#123;</span><br><span class="line">             echo &quot;上传文件扩展名是不允许的扩展名。&quot;;</span><br><span class="line">         &#125;else &#123;</span><br><span class="line"></span><br><span class="line">             $ok = move_uploaded_file($_FILES[&#x27;file&#x27;] [&#x27;tmp_name&#x27;], &#x27;./picture/&#x27; . $_FILES[&#x27;file&#x27;] [&#x27;name&#x27;]);</span><br><span class="line">             if ($ok) &#123;</span><br><span class="line">                 echo &#x27;文件保存在: ./picture/&#x27; . $_FILES[&#x27;file&#x27;] [&#x27;tmp_name&#x27;];</span><br><span class="line">             &#125; else &#123;</span><br><span class="line">                 echo &#x27;文件上传失败&#x27;;</span><br><span class="line">             &#125;</span><br><span class="line">         &#125;</span><br><span class="line">?&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在文件夹中的存储方式是：</p>
+<?php
+if ($_FILES["file"]["error"] > 0)
+{
+    echo "错误：" . $_FILES["file"]["error"] . "<br>";
+}
+else
+{
+    echo "上传文件名: " . $_FILES["file"]["name"] . "<br>";
+    echo "文件类型: " . $_FILES["file"]["type"] . "<br>";
+    echo "文件大小: " . ($_FILES["file"]["size"] / 1024) . " kB<br>";
+    echo "文件临时存储的位置: " . $_FILES["file"]["tmp_name"];
+}
+?>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>幻心</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://huanxinhack.github.io/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-cookie-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/">http://huanxinhack.github.io/php%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-cookie-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/%E6%96%87%E4%BB%B6%E5%8C%85%E5%90%AB-cookie-%E6%96%87%E4%BB%B6%E4%B8%8A%E4%BC%A0/"># 文件包含,cookie,文件上传</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/github%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">Github博客搭建</a>
+            
+            
+            <a class="next" rel="next" href="/socks5%E4%BB%A3%E7%90%86ew-%E6%AD%A3%E5%90%91%E3%80%81%E5%8F%8D%E5%90%91%E3%80%81%E5%A4%9A%E7%BA%A7%E7%BA%A7%E8%81%94/">SOCKS5代理ew 正向、反向、多级级联</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 幻心 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

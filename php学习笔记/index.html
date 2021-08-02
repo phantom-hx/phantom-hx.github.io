@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="幻心">
+
+
+
+
+
+<title>PHP学习笔记 | 幻心&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">幻心&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">幻心&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">PHP学习笔记</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">幻心</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 13, 2020&nbsp;&nbsp;20:00:02</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/WEB%E5%AE%89%E5%85%A8/">WEB安全</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="语言基础"><a href="#语言基础" class="headerlink" title="语言基础"></a>语言基础</h2><ul>
+<li>php文件的后缀名：<code>.php</code></li>
+<li>php区分大小写，关键字和函数名不区分大小写</li>
+<li>php所有代码不会在前端显示</li>
+<li>注释：<ul>
+<li>单行注释：<code>//</code>或<code>#</code></li>
+<li>多行注释：<code>/* 注释内容 */</code></li>
+</ul>
+</li>
+</ul>
+<h2 id="变量"><a href="#变量" class="headerlink" title="变量"></a>变量</h2><ul>
+<li><p>变量：</p>
+<ul>
+<li>可以包含<code>字母</code>，<code>数字</code>，<code>下划线</code></li>
+<li>以<code>$</code>开始</li>
+<li>不能以数字开头</li>
+</ul>
+</li>
+<li><p><code>&#123;&#125;</code>：可以包住变量，如<code>&#123;$a&#125;</code>，用途：可在变量后紧跟其他内容，无需空格</p>
+</li>
+<li><p>赋值传值和引用传值</p>
+<ul>
+<li><p>赋值传值：    $a = 1;</p>
+<p>​            $b = $a;</p>
+<p>​            $a = 2;        <code>重新给$a赋值</code></p>
+<p>​            echo $b;        <code>$b的值不变，还是1</code></p>
+</li>
+<li><p>引用传值：     $a = 1;</p>
+<p>​            $b = &amp;$a;</p>
+<p>​            $a = 2;</p>
+<p>​            echo $b;        <code>结果为2</code></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h2><ul>
+<li><p>数据类型：</p>
+<ul>
+<li><p>标量数据类型：整形</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">int</span><br></pre></td></tr></table></figure>
+
+<p>浮点型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">float</span><br></pre></td></tr></table></figure>
+
+<p>布尔型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">bool</span><br></pre></td></tr></table></figure>
+
+<p>字符型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">string</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>布尔型<code>bool(false)</code>有哪些：<code>false</code> ，<code>整形0</code>， <code>浮点型0.0</code>， <code>空字符串“”</code>，  <code>字符串“0”</code>， <code>空数组</code>， <code>null</code>，其余全是<code>bool(true)</code></li>
+<li>整形<code>int</code>：可以用<code>十进制</code>、<code>八进制(0开头)</code>、<code>十六进制(0x开头)</code>进行赋值</li>
+<li>字符型<code>string</code>：在单引号<code>&#39;&#39;</code>里变量不会被解析</li>
+</ul>
+</li>
+<li><p>复合数据类型：数组<code>array</code>，对象<code>object</code></p>
+</li>
+<li><p>特殊数据类型：资源</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">resource</span><br></pre></td></tr></table></figure>
+
+<p>空</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">null</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>null</code>：这些情况被认为null：<code>被赋值为null</code>， <code>尚未赋值</code> ，<code>被unset()</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>判断数据类型</p>
+<ul>
+<li><pre><code>var_dump()
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  - 在UTF-8编码下，一个汉字用3个字节表示；在GBK下，一个汉字用2个字节表示</span><br><span class="line"></span><br><span class="line">- 通过</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+is
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    函数判断数据类型</span><br><span class="line"></span><br><span class="line">    - `is_bool()`，`is_float()`，`is_int()`，`is_numeric()`等等</span><br><span class="line"></span><br><span class="line">- EOF：处理长字符串</span><br><span class="line"></span><br><span class="line">  - 以`&lt;&lt;开始，`EOF`结束</span><br><span class="line">  - “EOF”可以自定义名称，叫什么都可以</span><br><span class="line">  - `EOF`表示字符串的结束，**必须放在行首，不能缩进，单独一行**</span><br><span class="line">  - 在`EOF`中，特殊字符不需要转义</span><br><span class="line"></span><br><span class="line">- 反斜杠`\`：用来转义被程序语法结构占用了的特殊字符</span><br><span class="line"></span><br><span class="line">- 检查变量是否设置</span><br><span class="line"></span><br><span class="line">  - `isset()`函数</span><br><span class="line">  - `empty()`函数</span><br><span class="line"></span><br><span class="line">- 强制数据类型转换：在变量前加上英文小括号并写入要转换的数据类型，如：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+(bool)$a
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  </span><br><span class="line"></span><br></pre></td></tr></table></figure>
+(int)$a
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">  - 其它类型转成字符串，有以下规则：</span><br><span class="line">    - 布尔值`true`转为字符串`1`，`false`转为字符串`&quot;&quot;`（空字符串）</span><br><span class="line">    - 整数或浮点数转换成数值型的字符串</span><br><span class="line">    - 数组将被转换成字符串`&quot;array&quot;`</span><br><span class="line">    - `null`将被转换成空字符串</span><br><span class="line">  - 其它类型转成整形或浮点型，有以下规则：</span><br><span class="line">    - 布尔值`false`转成`0`，`true`转成`1`</span><br><span class="line">    - 浮点数转成整形，数字被取整（小数位被丢弃）</span><br><span class="line">    - 如果字符串以合法的数字开头，这个数字可直接转成数值；否则，被转成`0`</span><br><span class="line"></span><br><span class="line">## 常量</span><br><span class="line"></span><br><span class="line">- 常量</span><br><span class="line"></span><br><span class="line">  - 不要在常量前加美元符号`$`</span><br><span class="line"></span><br><span class="line">  - 定义：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+define(name,value[,flag])
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    - name：变量名</span><br><span class="line">    - value：变量值</span><br><span class="line">    - flag：可选项，规定常量名是否对大小写敏感。`true`敏感，`false`不敏感</span><br><span class="line"></span><br><span class="line">- 系统常量</span><br><span class="line"></span><br><span class="line">  - `__FILE__`：PHP程序文件名</span><br><span class="line">  - `__LINE__`：PHP程序当前行号</span><br><span class="line">  - `PHP_VERSION`：PHP程序版本号</span><br><span class="line">  - `PHP_OS`：操作系统名称</span><br><span class="line">  - `TRUE`：真值</span><br><span class="line">  - `FALSE`：假值</span><br><span class="line">  - `NULL`：一个null值</span><br><span class="line">  - `E_ERROR`：这个常量指到最近的错误处</span><br><span class="line">  - `E_WARNING`：这个常量指到最近的警告处</span><br><span class="line">  - `E_PARSE`：这个常量指到解析语法有潜在问题处</span><br><span class="line">  - `E_NOTICE`：这个常量为发生不寻常但不一定是错误处</span><br><span class="line"></span><br><span class="line">## 运算符</span><br><span class="line"></span><br><span class="line">算数运算符，逻辑运算符，比较运算符，赋值运算符，字符串运算符，条件运算符</span><br><span class="line"></span><br><span class="line">- 算术运算符：`+`，`-`，`*`，`/`，`%`，`++`，`--`</span><br><span class="line">- 字符串运算符：`.`，`.=`</span><br><span class="line">- 赋值运算符：`=`，`-=`，`+=`，`*=`，`/=`，`%=`</span><br><span class="line">- 比较运算符：`&gt;`，`&lt;`，`&gt;=`，`&lt;=`，`==`，`===`，`!=`，`!==`，`&lt;&gt;`</span><br><span class="line">- 逻辑运算符：`and(&amp;&amp;)`，`or(||)`，`not(!)`</span><br><span class="line">- 条件运算符：`?:`</span><br><span class="line"></span><br><span class="line">## 流程控制</span><br><span class="line"></span><br><span class="line">- if条件判断</span><br><span class="line"></span><br><span class="line">  - if()&#123;&#125;</span><br><span class="line">  - if()&#123;&#125;else&#123;&#125;</span><br><span class="line">  - if()&#123;&#125;elseif()&#123;&#125;else…</span><br><span class="line"></span><br><span class="line">- while循环：先判断，后循环</span><br><span class="line"></span><br><span class="line">  ​    $i = 0;</span><br><span class="line"></span><br><span class="line">  ​    while($i&lt;100)&#123;</span><br><span class="line"></span><br><span class="line">  ​        echo $i;</span><br><span class="line"></span><br><span class="line">  ​    &#125;</span><br><span class="line"></span><br><span class="line">- do  while循环：先循环一次，在进行判断</span><br><span class="line"></span><br><span class="line">  ​    $i = 0;</span><br><span class="line"></span><br><span class="line">  ​    do&#123;</span><br><span class="line"></span><br><span class="line">  ​        echo $i;</span><br><span class="line"></span><br><span class="line">  ​    &#125;while($i&gt;100)</span><br><span class="line"></span><br><span class="line">- switch分支语句：通过一个条件来选择要执行的代码</span><br><span class="line"></span><br><span class="line">  ​    switch(参数或表达式)&#123;</span><br><span class="line"></span><br><span class="line">  ​    case 值1:</span><br><span class="line"></span><br><span class="line">  ​        code1;</span><br><span class="line"></span><br><span class="line">  ​        break;</span><br><span class="line"></span><br><span class="line">  ​    default:</span><br><span class="line"></span><br><span class="line">  ​        code;</span><br><span class="line"></span><br><span class="line">  ​        break;</span><br><span class="line"></span><br><span class="line">  ​    &#125;</span><br><span class="line"></span><br><span class="line">- for循环</span><br><span class="line"></span><br><span class="line">  - for(初始化;条件判断;条件更新)&#123;</span><br><span class="line"></span><br><span class="line">    ​    循环体语句块;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">- break语句：无条件结束循环，使程序跳转到大括号之后，break可接受参数来决定跳出几层循环，默认只跳出当前循环</span><br><span class="line"></span><br><span class="line">- continue语句：结束本次循环，也可接受一个参数，来决定跳出几重循环</span><br><span class="line"></span><br><span class="line">## 数组</span><br><span class="line"></span><br><span class="line">- 分类</span><br><span class="line"></span><br><span class="line">  - 索引数组：下标为整数的数组</span><br><span class="line">  - 关联数组：下标为字符串的数组</span><br><span class="line">  - 多维数组：数组的一个或多个元素是数组</span><br><span class="line"></span><br><span class="line">- 创建数组</span><br><span class="line"></span><br><span class="line">  - 使用数组标识符</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+[]
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">    来创建数组：</span><br><span class="line"></span><br><span class="line">    - 语法：$arr[key] = value;</span><br><span class="line"></span><br><span class="line">  - 使用array函数来创建：</span><br><span class="line"></span><br><span class="line">    - 语法：$arr = array([key=&gt;]value,…);</span><br><span class="line"></span><br><span class="line">- unset()函数：删除数组元素</span><br><span class="line"></span><br><span class="line">  - 只删除元素，但保留其结构</span><br><span class="line"></span><br><span class="line">    - 解析：    $arr = [1,2,3,4,5];</span><br><span class="line"></span><br><span class="line">      ​        foreach($arr as $i=&gt;$value)&#123;unset($arr[$i]);&#125;</span><br><span class="line"></span><br><span class="line">      ​        $arr[] = 100;    `此时，值为100的键名为5`</span><br><span class="line"></span><br><span class="line">- foreach()函数：（只能）遍历数组</span><br><span class="line"></span><br><span class="line">  - 语法：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+1. foreach($arr as $value)&#123;`code;`&#125;
+  2. foreach($arr as $key =&gt; $value)&#123;`code;`&#125;
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p>其他一些数组操作函数：<code>count()</code>，<code>array_shift</code>，<code>array_pop()</code>，<code>array_reverse</code>，<code>array_flip()</code>……</p>
+</li>
+<li><p>PHP全局数组</p>
+<ul>
+<li>$_SERVER<ul>
+<li>$_SERVER[‘SERVER_ADDR’]：服务器IP地址</li>
+<li>$_SERVER[‘REMOTE-ADDR’]：客户端IP地址</li>
+<li>$_SERVER[‘SERVER_NAME’]：服务器域名称</li>
+</ul>
+</li>
+<li>$_GET</li>
+<li>$_POST</li>
+<li>$_FILES</li>
+<li>$_REQUEST</li>
+<li>$_SESSION</li>
+</ul>
+</li>
+</ul>
+<h2 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h2><ul>
+<li><p>必须由<code>function</code>关键字开头来定义一个函数</p>
+</li>
+<li><p>函数名的命名规则和变量一样，函数名不能以<code>$</code>开头</p>
+</li>
+<li><p>函数名后紧跟括号()，()中包含参数，参数是函数将从调用者处获得的值，参数可有可无，数量根据需要而定</p>
+</li>
+<li><p>函数代码块在定义时不会执行，只有在被调用时才执行</p>
+</li>
+<li><p>可以使用<code>return</code>返回值</p>
+</li>
+<li><p>参数：</p>
+<ul>
+<li><p>值传递：正常的写法</p>
+</li>
+<li><p>引用传递：在参数前加上<code>&amp;</code></p>
+<ul>
+<li><p>解析：    $arr = array(1,2,3,4);</p>
+<p>​        function addElement(&amp;$arr){</p>
+<p>​            $arr[count($arr)] = 100;</p>
+<p>​            print_r($arr);            <code>//在函数内输出$arr</code></p>
+<p>​        }</p>
+<p>​        addElement($arr);</p>
+<p>​        print_r($arr);                <code>//在函数外输出$arr</code></p>
+</li>
+</ul>
+</li>
+<li><p>默认值传递：传递一个默认的值，在调用是可以根据情况指定或不指定</p>
+<ul>
+<li><p>解析：    function func1($who,$animal = ‘猪’){</p>
+<p>​            echo “$who 是 $animal”;</p>
+<p>​        }</p>
+<p>​        func1(‘老鹰’，‘鸟’)；</p>
+<p>​        func1(‘你’)；                    <code>过于真实，举报了！</code></p>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>函数变量的作用域：在PHP中，函数外部与内部的变量不能通用，必须在声明变量时加上<code>global</code>关键字才可以</p>
+<ul>
+<li><code>global</code>关键字只能在函数内使用</li>
+<li>不能在声明变量的同时赋值</li>
+</ul>
+</li>
+<li><p>内置函数</p>
+<ul>
+<li><code>include</code>：如果指定文件有错，则报警告并继续执行</li>
+<li><code>require</code>：如果指定文件有错，则报致命错误并终止运行</li>
+</ul>
+</li>
+<li><p>PHP内置了各种函数，比如：</p>
+<ul>
+<li>日期和时间函数</li>
+<li>数学函数</li>
+<li>HTTP函数</li>
+<li>URL函数</li>
+<li>字符串操作函数</li>
+<li>等等……</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>幻心</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://huanxinhack.github.io/php%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">http://huanxinhack.github.io/php%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/PHP/"># PHP</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/php%E8%A1%A8%E5%8D%95-%E6%96%87%E4%BB%B6-%E4%BB%A3%E7%A0%81-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/">PHP表单&文件&代码&命令执行</a>
+            
+            
+            <a class="next" rel="next" href="/github%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">Github博客搭建</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 幻心 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

